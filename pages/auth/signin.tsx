@@ -1,8 +1,14 @@
 import { getProviders, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import type { GetServerSideProps } from "next";
+import type { ClientSafeProvider } from "next-auth/react";
 
-export default function SignIn({ providers }: any) {
+interface SignInProps {
+  providers: Record<string, ClientSafeProvider>;
+}
+
+export default function SignIn({ providers }: SignInProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,13 +16,12 @@ export default function SignIn({ providers }: any) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
       redirect: true,
       callbackUrl: "/",
     });
-
     setLoading(false);
   };
 
@@ -72,10 +77,7 @@ export default function SignIn({ providers }: any) {
         {/* Link to Register */}
         <p className="text-center text-sm text-gray-600 pt-4">
           New user?{" "}
-          <Link
-            href="/auth/register"
-            className="text-purple-600 hover:underline"
-          >
+          <Link href="/auth/register" className="text-purple-600 hover:underline">
             Register here
           </Link>
         </p>
@@ -84,9 +86,9 @@ export default function SignIn({ providers }: any) {
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async () => {
   const providers = await getProviders();
   return {
     props: { providers },
   };
-}
+};

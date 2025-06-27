@@ -10,25 +10,30 @@ export default function Register() {
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await axios.post("/api/register", {
-        name,
-        email,
-        password,
-      });
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const res = await axios.post("/api/register", {
+      name,
+      email,
+      password,
+    });
 
-      if (res.status === 200) {
-        alert("✅ Registration successful!");
-        router.push("/auth/signin");
-      }
-    } catch (err: any) {
-      alert(err.response?.data?.message || "❌ Registration failed.");
-    } finally {
-      setLoading(false);
+    if (res.status === 200) {
+      alert("✅ Registration successful!");
+      router.push("/auth/signin");
     }
-  };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      alert("❌ " + err.message);
+    } else {
+      alert("❌ Registration failed.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-100">

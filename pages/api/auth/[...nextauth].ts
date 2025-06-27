@@ -37,7 +37,7 @@ export const authOptions: AuthOptions = {
     error: "/auth/signin", // redirect here on error
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -53,7 +53,7 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({baseUrl }) {
       return baseUrl; // 👈 Always go to homepage after login
     },
   },
