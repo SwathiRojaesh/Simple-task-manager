@@ -5,7 +5,7 @@ import type { GetServerSideProps } from "next";
 import type { ClientSafeProvider } from "next-auth/react";
 
 interface SignInProps {
-  providers: Record<string, ClientSafeProvider>;
+  providers: Record<string, ClientSafeProvider> | null;
 }
 
 export default function SignIn({ providers }: SignInProps) {
@@ -13,15 +13,17 @@ export default function SignIn({ providers }: SignInProps) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     await signIn("credentials", {
       email,
       password,
       redirect: true,
       callbackUrl: "/",
     });
+
     setLoading(false);
   };
 

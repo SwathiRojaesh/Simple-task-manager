@@ -7,10 +7,7 @@ import bcrypt from "bcryptjs";
 
 export const authOptions: AuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+  
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -25,7 +22,11 @@ export const authOptions: AuthOptions = {
         const isValid = await bcrypt.compare(credentials!.password, user.password);
         if (!isValid) throw new Error("Wrong password");
 
-        return { id: user._id.toString(), email: user.email, name: user.name };
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   ],
@@ -33,28 +34,28 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/auth/signin", // custom sign-in page
-    error: "/auth/signin", // redirect here on error
+    signIn: "/auth/signin",
+    error: "/auth/signin", // redirect back to sign in on error
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = (user as any).id;
         token.email = user.email;
         token.name = user.name;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.name = token.name;
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
       return session;
     },
-    async redirect({baseUrl }) {
-      return baseUrl; // 👈 Always go to homepage after login
+    async redirect({ baseUrl }) {
+      return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

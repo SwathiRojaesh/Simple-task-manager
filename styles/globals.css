@@ -1,10 +1,7 @@
-/* ✅ Tailwind setup (must come first) */
+/* ✅ Tailwind setup */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* ✅ Your custom variable setup */
-@import "tailwindcss";
 
 /* 🌤️ Light Mode Variables */
 :root {
@@ -12,20 +9,12 @@
   --foreground: #171717;
 }
 
-/* 🌙 Dark Mode Variables */
+/* 🌙 Dark Mode Override (if system prefers light, override vars) */
 @media (prefers-color-scheme: light) {
   :root {
     --background: #960c0c;
     --foreground: #ededed;
   }
-}
-
-/* 🔤 Theme Font and Color Variables */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 /* 🧍 Global body styles */

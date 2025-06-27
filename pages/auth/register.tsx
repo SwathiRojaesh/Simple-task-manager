@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 
 export default function Register() {
@@ -9,31 +9,32 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    const res = await axios.post("/api/register", {
-      name,
-      email,
-      password,
-    });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-    if (res.status === 200) {
-      alert("✅ Registration successful!");
-      router.push("/auth/signin");
-    }
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      alert("❌ " + err.message);
-    } else {
-      alert("❌ Registration failed.");
-    }
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const res = await axios.post("/api/register", {
+        name,
+        email,
+        password,
+      });
 
+      if (res.status === 200) {
+        alert("✅ Registration successful!");
+        router.push("/auth/signin");
+      }
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      if (error.response?.data?.message) {
+        alert("❌ " + error.response.data.message);
+      } else {
+        alert("❌ Registration failed.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-100">
