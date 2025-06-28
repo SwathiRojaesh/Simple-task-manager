@@ -7,7 +7,10 @@ import bcrypt from "bcryptjs";
 
 export const authOptions: AuthOptions = {
   providers: [
-  
+    GoogleProvider({
+  clientId: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+}),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
