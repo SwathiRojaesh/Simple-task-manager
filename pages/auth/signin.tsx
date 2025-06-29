@@ -61,22 +61,27 @@ export default function SignIn({ providers }: SignInProps) {
           </button>
         </form>
 
-        {/* Google Login */}
-        {providers?.google && (
+        {/* OAuth Providers */}
+        {providers && (
           <>
             <hr className="my-4" />
-            <div className="text-center">
-              <button
-                onClick={() => signIn("google")}
-                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-              >
-                Sign in with Google
-              </button>
+            <div className="text-center space-y-2">
+              {Object.values(providers).map((provider) =>
+                provider.id !== "credentials" ? (
+                  <button
+                    key={provider.id}
+                    onClick={() => signIn(provider.id)}
+                    className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                  >
+                    Sign in with {provider.name}
+                  </button>
+                ) : null
+              )}
             </div>
           </>
         )}
 
-        {/* Link to Register */}
+        {/* Register Link */}
         <p className="text-center text-sm text-gray-600 pt-4">
           New user?{" "}
           <Link href="/auth/register" className="text-purple-600 hover:underline">
