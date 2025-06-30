@@ -7,19 +7,26 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function Home() {
-  const { data: session, status } = useSession(); // ✅ FIXED
+  const { data: session, status } = useSession();
   const router = useRouter();
   const tasks = useTaskStore(state => state.tasks);
+  const clearTasks = useTaskStore(state => state.clearTasks); // ✅ GET clearTasks
 
-  // ✅ Fix redirect only after session is fully loaded
+  // ✅ Redirect if not authenticated
   useEffect(() => {
-    if (status === "loading") return; // wait until it's done
+    if (status === "loading") return;
     if (!session) {
       router.push("/auth/signin");
     }
   }, [session, status, router]);
 
-  // ✅ Optional: Show loading screen
+  // ✅ Handle Zustand + NextAuth logout
+  const handleSignOut = () => {
+    clearTasks();         // ✅ CLEAR Zustand state
+    signOut();            // ✅ SIGN OUT of NextAuth (redirects by default)
+  };
+
+  // Optional: show a loading state
   if (status === "loading") {
     return (
       <main className="min-h-screen flex items-center justify-center text-gray-700">
@@ -47,7 +54,7 @@ export default function Home() {
                   Signed in as: <strong>{session.user?.name}</strong>
                 </p>
                 <button
-                  onClick={() => signOut()}
+                  onClick={handleSignOut} // ✅ USE the custom handler
                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
                 >
                   Sign out

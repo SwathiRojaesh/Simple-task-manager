@@ -21,14 +21,14 @@ export default function TaskInput() {
         placeholder="Task title"
         value={title}
         onChange={e => setTitle(e.target.value)}
-        className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black dark:text-white dark:bg-gray-800"
       />
       <input
         type="text"
         placeholder="Optional description"
         value={desc}
         onChange={e => setDesc(e.target.value)}
-        className="w-full p-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black dark:text-white dark:bg-gray-800"
       />
       <button
         type="submit"

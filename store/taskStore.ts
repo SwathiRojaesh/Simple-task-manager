@@ -1,43 +1,39 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
-export type Task = {
-  id: number
-  title: string
-  description?: string
-  completed: boolean
+interface Task {
+  id: string;
+  title: string;
+  description: string;
 }
 
-type TaskStore = {
-  tasks: Task[]
-  addTask: (title: string, description?: string) => void
-  toggleTask: (id: number) => void
-  deleteTask: (id: number) => void
+interface TaskStore {
+  tasks: Task[];
+  addTask: (title: string, description: string) => void;
+  removeTask: (id: string) => void;
+  clearTasks: () => void; // ✅ add this
 }
 
 const useTaskStore = create<TaskStore>((set) => ({
   tasks: [],
-  addTask: (title, description = '') =>
+  addTask: (title, description) =>
     set((state) => ({
       tasks: [
         ...state.tasks,
         {
-          id: Date.now(),
+          id: Date.now().toString(), // or use uuid
           title,
           description,
-          completed: false,
         },
       ],
     })),
-  toggleTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      ),
-    })),
-  deleteTask: (id) =>
+  removeTask: (id) =>
     set((state) => ({
       tasks: state.tasks.filter((task) => task.id !== id),
     })),
-}))
+  clearTasks: () =>
+    set(() => ({
+      tasks: [],
+    })),
+}));
 
-export default useTaskStore
+export default useTaskStore;
