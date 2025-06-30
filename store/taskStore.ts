@@ -1,16 +1,18 @@
 import { create } from 'zustand';
 
-interface Task {
+export type Task = {
   id: string;
   title: string;
   description: string;
-}
+  completed?: boolean; // added this for toggle support
+};
 
 interface TaskStore {
   tasks: Task[];
   addTask: (title: string, description: string) => void;
-  removeTask: (id: string) => void;
-  clearTasks: () => void; // ✅ add this
+  deleteTask: (id: string) => void;
+  toggleTask: (id: string) => void;
+  clearTasks: () => void;
 }
 
 const useTaskStore = create<TaskStore>((set) => ({
@@ -20,20 +22,24 @@ const useTaskStore = create<TaskStore>((set) => ({
       tasks: [
         ...state.tasks,
         {
-          id: Date.now().toString(), // or use uuid
+          id: Date.now().toString(),
           title,
           description,
+          completed: false,
         },
       ],
     })),
-  removeTask: (id) =>
+  deleteTask: (id) =>
     set((state) => ({
       tasks: state.tasks.filter((task) => task.id !== id),
     })),
-  clearTasks: () =>
-    set(() => ({
-      tasks: [],
+  toggleTask: (id) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      ),
     })),
+  clearTasks: () => set(() => ({ tasks: [] })),
 }));
 
 export default useTaskStore;
