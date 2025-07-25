@@ -22,7 +22,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "middleware.ts",
     "types" // ✅ Include custom types folder
-  ],
+, "prisma/seed.js"  ],
   "exclude": ["node_modules"]
 }
