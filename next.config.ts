@@ -2,8 +2,7 @@ import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // This part is new and important.
-  // It makes your environment variables available to the app during the build.
+  // This section makes all your secret keys available to the application.
   env: {
     DATABASE_URL: process.env.DATABASE_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
